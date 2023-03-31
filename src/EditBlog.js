@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const blogValidationSchema = yup.object({
+  id: yup.string().required(),
   title: yup.string().required().min(10),
   image: yup.string().required().min(10).url(),
   writer: yup.string().required().min(5),
@@ -23,22 +24,20 @@ export function EditBlog() {
     })
       .then((data) => data.json())
       .then((BD) => setBlog(BD));
-      console.log(setBlog);
   }, []);
 
-console.log(setBlog);
   console.log(blog);
-
   return <div className="edit-loading">
 
     {blog ? <EditBlogForm blog={blog} /> : "Loading..."}
   </div>
 }
 
-function EditBlogForm({blog}) {
+function EditBlogForm({ blog }) {
 
   const { handleBlur, handleSubmit, values, handleChange, touched, errors } = useFormik({
     initialValues: {
+      id: "",
       title: "",
       image: "",
       writer: "",
@@ -50,7 +49,7 @@ function EditBlogForm({blog}) {
         method: "PUT",
         body: JSON.stringify(updateBlog),
         headers: { "Content-type": "application/json" },
-    }).then(() => navigate("/blogs"))
+      }).then(() => navigate("/blogs"))
     }
   });
 
@@ -60,6 +59,15 @@ function EditBlogForm({blog}) {
     <div>
       <h2 className="blog-add">Edit Blog</h2>
       <form className="create-blog" onSubmit={handleSubmit}>
+        <TextField
+          name="id"
+          label="Ref ID"
+          variant="outlined"
+          onChange={handleChange}
+          value={values.id}
+          onBlur={handleBlur}
+        />
+        {touched.id && errors.id ? errors.id : null}
         <TextField
           name="title"
           label="Blog Title"

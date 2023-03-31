@@ -1,6 +1,6 @@
 import { AppBar, Button, Toolbar } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
 import { BlogPage } from './BlogPage';
 import { CreateBlog } from './CreateBlog';
@@ -40,10 +40,34 @@ function App() {
         <Route path='/blogs' element={<BlogPage BlogData={BlogData}/>} />
         <Route path='/create/blog' element={<CreateBlog setBlogData={setBlogData} BlogData={BlogData}/>} />
         <Route path='/edit/blog/:id' element={<EditBlog />} />
+        <Route path='/blogs/:id' element={<BlogDetails />} />
       </Routes>
     </div>
   );
 }
 
+function BlogDetails(){
 
+  const { id } = useParams();
+  // const movie = movieList[id];
+
+  const [Blog, setBlogData] = useState([]);
+
+  useEffect(()=>{
+    fetch(`https://6423eba3d6152a4d48023d2b.mockapi.io/blogs/${id}`, {method:"GET"})
+      .then((data) => data.json())
+      .then((Blog) => setBlogData(Blog))
+    }, []);
+
+  return(
+    <div className="detail">
+    <div className="detail-blog">
+      <img src={Blog.image} alt={Blog.title} className='detail-image'/>
+      <h2>{Blog.title}</h2>
+      <p>{Blog.description}</p>
+      <span>Writen by, {Blog.writer}</span>
+    </div>
+    </div>
+  )
+}
 export default App;

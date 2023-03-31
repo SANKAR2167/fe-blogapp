@@ -29,10 +29,10 @@ export function BlogPage() {
     <div className="blog-page">
       <Button variant="contained" className="create" onClick={() => navigate(`/create/blog`)}>Create Blog +</Button>
       <div className="blogs-container">
-        {blogData.map((BD, index) => (<Blog
-          key={index}
+        {blogData.map((BD) => (<Blog
+          key={BD.id}
           blog={BD}
-          id={index}
+          id={BD.id}
           deleteButton={<IconButton color="error" onClick={() => deleteBlog(BD.id)} sx={{ marginLeft: "auto" }}><DeleteIcon /></IconButton>}
           editButton={ 
           <IconButton
