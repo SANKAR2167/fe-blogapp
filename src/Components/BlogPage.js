@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
+import { API } from "./global";
 
 export function BlogPage() {
 
@@ -13,14 +14,14 @@ export function BlogPage() {
 
 
   const getblogs = () => {
-    fetch(`https://6423eba3d6152a4d48023d2b.mockapi.io/blogs`, { method: "GET" })
+    fetch(`${API}/blogs`, { method: "GET" })
       .then((data) => data.json())
       .then((blogs) => setBlogData(blogs))
   }
   useEffect(() => getblogs(), []);
 
   const deleteBlog = (id) => {
-    fetch(`https://6423eba3d6152a4d48023d2b.mockapi.io/blogs/${id}`, { method: "DELETE" })
+    fetch(`${API}/blogs/${id}`, { method: "DELETE" })
       .then((data) => getblogs())
   };
 
@@ -30,14 +31,14 @@ export function BlogPage() {
       <Button variant="contained" className="create" onClick={() => navigate(`/create/blog`)}>Create Blog +</Button>
       <div className="blogs-container">
         {blogData.map((BD) => (<Blog
-          key={BD.id}
+          key={BD._id}
           blog={BD}
-          id={BD.id}
-          deleteButton={<IconButton color="error" onClick={() => deleteBlog(BD.id)} sx={{ marginLeft: "auto" }}><DeleteIcon /></IconButton>}
+          id={BD._id}
+          deleteButton={<IconButton color="error" onClick={() => deleteBlog(BD._id)} sx={{ marginLeft: "auto" }}><DeleteIcon /></IconButton>}
           editButton={ 
           <IconButton
             sx={{ marginLeft: "auto" }}
-            onClick={() => navigate(`/edit/blog/${BD.id}`)}
+            onClick={() => navigate(`/edit/blog/${BD._id}`)}
             aria-label="edit"
             color="primary"
           >

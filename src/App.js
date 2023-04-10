@@ -1,11 +1,16 @@
 import { AppBar, Button, Toolbar } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
-import { BlogPage } from './BlogPage';
-import { CreateBlog } from './CreateBlog';
-import { Home } from './Home';
-import { EditBlog } from './EditBlog';
+import { BlogPage } from './Components/BlogPage';
+import { CreateBlog } from './Components/CreateBlog';
+import { Home } from './Components/Home';
+import { EditBlog } from './Components/EditBlog';
+import { API } from './Components/global';
+import { BlogDetails } from './Components/BlogDetails';
+import SignUp from './Components/SignUp';
+import Login from './Components/Login';
+
 
 // const data = [
 //   {
@@ -20,11 +25,13 @@ function App() {
   const [BlogData, setBlogData] = useState([]);
 
   useEffect(() => {
-    fetch(`https://6423eba3d6152a4d48023d2b.mockapi.io/blogs`)
+    fetch(`${API}/blogs`)
       .then((data) => data.json())
       .then((blogs) => setBlogData(blogs))
   }, []);
   const navigate = useNavigate();
+
+  
 
   //https://6423eba3d6152a4d48023d2b.mockapi.io/blogs
   return (
@@ -33,41 +40,29 @@ function App() {
         <Toolbar className='toolbar'>
           <Button className='menu' color='inherit' onClick={() => navigate(`/`)}>Home</Button>
           <Button className='menu' color='inherit' onClick={() => navigate(`/blogs`)}>Blogs</Button>
+          <Button className='menu' color='inherit' onClick={() => navigate(`/users/login`)}>Login</Button>
         </Toolbar>
       </AppBar>
+
+      {/* Route Setup */}
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/blogs' element={<BlogPage BlogData={BlogData}/>} />
-        <Route path='/create/blog' element={<CreateBlog setBlogData={setBlogData} BlogData={BlogData}/>} />
-        <Route path='/edit/blog/:id' element={<EditBlog />} />
-        <Route path='/blogs/:id' element={<BlogDetails />} />
+        <Route path='/' element={<ProductedRoute><Home /></ProductedRoute>} />
+        <Route path='/blogs' element={<ProductedRoute><BlogPage /></ProductedRoute>} />
+        <Route path='/create/blog' element={<ProductedRoute><CreateBlog /></ProductedRoute>} />
+        <Route path='/edit/blog/:id' element={<ProductedRoute><EditBlog /></ProductedRoute>} />
+        <Route path='/blogs/:id' element={<ProductedRoute><BlogDetails /></ProductedRoute>} />
+        <Route path='/users/login' element={<Login />} />
+        <Route path='/users/signup' element={<SignUp />} />
       </Routes>
     </div>
   );
 }
 
-function BlogDetails(){
 
-  const { id } = useParams();
-  // const movie = movieList[id];
-
-  const [Blog, setBlogData] = useState([]);
-
-  useEffect(()=>{
-    fetch(`https://6423eba3d6152a4d48023d2b.mockapi.io/blogs/${id}`, {method:"GET"})
-      .then((data) => data.json())
-      .then((Blog) => setBlogData(Blog))
-    }, []);
-
-  return(
-    <div className="detail">
-    <div className="detail-blog">
-      <img src={Blog.image} alt={Blog.title} className='detail-image'/>
-      <h2>{Blog.title}</h2>
-      <p>{Blog.description}</p>
-      <span>Writen by, {Blog.writer}</span>
-    </div>
-    </div>
-  )
+function ProductedRoute({ children }) {
+  const isAuth = localStorage.getItem("token");
+  // console.log(isAuth);
+  return isAuth ? children : <Navigate replace to={"/users/login"} />;
 }
+
 export default App;

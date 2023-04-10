@@ -2,6 +2,9 @@ import { Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from 'yup';
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { API } from "./global";
 
 const blogValidationSchema = yup.object({
   id: yup.string().required(),
@@ -10,8 +13,28 @@ const blogValidationSchema = yup.object({
   writer: yup.string().required().min(5),
   description: yup.string().required().min(50)
 })
-export function CreateBlog() {
+export function EditBlog() {
 
+  const { id } = useParams();
+
+  const [blog, setBlog] = useState(null);
+
+  useEffect(() => {
+    fetch(`${API}/blogs/${id}`, {
+      method: "GET",
+    })
+      .then((data) => data.json())
+      .then((BD) => setBlog(BD));
+  }, []);
+
+  console.log(blog);
+  return <div className="edit-loading">
+
+    {blog ? <EditBlogForm blog={blog} /> : "Loading..."}
+  </div>
+}
+
+function EditBlogForm({ blog }) {
 
   const { handleBlur, handleSubmit, values, handleChange, touched, errors } = useFormik({
     initialValues: {
@@ -22,24 +45,20 @@ export function CreateBlog() {
       description: "",
     },
     validationSchema: blogValidationSchema,
-    onSubmit: (newBlog) => {
-      addBlog(newBlog);
+    onSubmit: async (updateBlog) => {
+      await fetch(`${API}/blogs/${blog.id}`, {
+        method: "PUT",
+        body: JSON.stringify(updateBlog),
+        headers: { "Content-type": "application/json" },
+      }).then(() => navigate("/blogs"))
     }
   });
 
   const navigate = useNavigate();
 
-  const addBlog = (newBlog) => {
-    fetch(`https://6423eba3d6152a4d48023d2b.mockapi.io/blogs`, {
-      method: "POST",
-      body: JSON.stringify(newBlog),
-      headers: { "Content-type": "application/json" },
-    }).then(() => navigate('/blogs'))
-  };
-
   return (
     <div>
-      <h2 className="blog-add">Create New Blog</h2>
+      <h2 className="blog-add">Edit Blog</h2>
       <form className="create-blog" onSubmit={handleSubmit}>
         <TextField
           name="id"
@@ -93,7 +112,7 @@ export function CreateBlog() {
           color="error"
           type="submit"
         >
-          Create Blog
+          Update Blog
         </Button>
       </form>
     </div>
