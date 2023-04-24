@@ -5,7 +5,6 @@ import * as yup from 'yup';
 import { API } from "./global";
 
 const blogValidationSchema = yup.object({
-  id: yup.string().required(),
   title: yup.string().required().min(10),
   image: yup.string().required().min(10).url(),
   writer: yup.string().required().min(5),
@@ -16,7 +15,6 @@ export function CreateBlog() {
 
   const { handleBlur, handleSubmit, values, handleChange, touched, errors } = useFormik({
     initialValues: {
-      id: "",
       title: "",
       image: "",
       writer: "",
@@ -42,15 +40,6 @@ export function CreateBlog() {
     <div>
       <h2 className="blog-add">Create New Blog</h2>
       <form className="create-blog" onSubmit={handleSubmit}>
-        <TextField
-          name="id"
-          label="Ref ID"
-          variant="outlined"
-          onChange={handleChange}
-          value={values.id}
-          onBlur={handleBlur}
-        />
-        {touched.id && errors.id ? errors.id : null}
         <TextField
           name="title"
           label="Blog Title"

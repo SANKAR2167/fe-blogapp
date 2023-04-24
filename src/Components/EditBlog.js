@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { API } from "./global";
 
 const blogValidationSchema = yup.object({
-  id: yup.string().required(),
   title: yup.string().required().min(10),
   image: yup.string().required().min(10).url(),
   writer: yup.string().required().min(5),
@@ -27,7 +26,8 @@ export function EditBlog() {
       .then((BD) => setBlog(BD));
   }, []);
 
-  console.log(blog);
+  // console.log(blog);
+
   return <div className="edit-loading">
 
     {blog ? <EditBlogForm blog={blog} /> : "Loading..."}
@@ -38,15 +38,14 @@ function EditBlogForm({ blog }) {
 
   const { handleBlur, handleSubmit, values, handleChange, touched, errors } = useFormik({
     initialValues: {
-      id: "",
-      title: "",
-      image: "",
-      writer: "",
-      description: "",
+      title: blog.title,
+      image: blog.image,
+      writer: blog.writer,
+      description: blog.description,
     },
     validationSchema: blogValidationSchema,
     onSubmit: async (updateBlog) => {
-      await fetch(`${API}/blogs/${blog.id}`, {
+      await fetch(`${API}/blogs/${blog._id}`, {
         method: "PUT",
         body: JSON.stringify(updateBlog),
         headers: { "Content-type": "application/json" },
@@ -54,21 +53,13 @@ function EditBlogForm({ blog }) {
     }
   });
 
+
   const navigate = useNavigate();
 
   return (
     <div>
       <h2 className="blog-add">Edit Blog</h2>
       <form className="create-blog" onSubmit={handleSubmit}>
-        <TextField
-          name="id"
-          label="Ref ID"
-          variant="outlined"
-          onChange={handleChange}
-          value={values.id}
-          onBlur={handleBlur}
-        />
-        {touched.id && errors.id ? errors.id : null}
         <TextField
           name="title"
           label="Blog Title"
@@ -109,7 +100,7 @@ function EditBlogForm({ blog }) {
         {touched.description && errors.description ? errors.description : null}
         <Button
           variant="contained"
-          color="error"
+          color="success"
           type="submit"
         >
           Update Blog
