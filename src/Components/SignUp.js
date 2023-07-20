@@ -29,7 +29,7 @@ export default function SignUp() {
         },
     })
     const addUser = (newList) => {
-        fetch(`${API}/users/signup`, {
+        fetch(`${API}/bl_users/signup`, {
             method: "POST",
             body: JSON.stringify(newList),
             headers: { "Content-Type": "application/json" }
@@ -41,7 +41,7 @@ export default function SignUp() {
                 } else {
                     console.log("login successfull");
                     toast.success("Registration Successful");
-                    navigate('/users/login')
+                    navigate('/bl_users/login')
                 }
             })
     }
@@ -82,7 +82,7 @@ export default function SignUp() {
                       />
                       {touched.password && errors.password ? errors.password : null}
                     <Button variant="contained" type="submit" color='success'>Register<LockOpenIcon /></Button>
-                    <p className='text'>Don't have an account <span onClick={() => navigate(`/users/login`)} className='nav'>Login</span> here</p>
+                    <p className='text'>Don't have an account <span onClick={() => navigate(`/bl_users/login`)} className='nav'>Login</span> here</p>
                 </div>
             </Card>
         </form>

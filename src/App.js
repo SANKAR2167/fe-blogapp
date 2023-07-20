@@ -10,6 +10,7 @@ import { API } from './Components/global';
 import { BlogDetails } from './Components/BlogDetails';
 import SignUp from './Components/SignUp';
 import Login from './Components/Login';
+import { AllBlogPage } from './Components/AllBlogPage';
 
 
 // const data = [
@@ -31,7 +32,7 @@ function App() {
   }, []);
   const navigate = useNavigate();
 
-  
+
 
   //https://6423eba3d6152a4d48023d2b.mockapi.io/blogs
   return (
@@ -39,8 +40,9 @@ function App() {
       <AppBar position='fixed' color='error'>
         <Toolbar className='toolbar'>
           <Button className='menu' color='inherit' onClick={() => navigate(`/`)}>Home</Button>
-          <Button className='menu' color='inherit' onClick={() => navigate(`/blogs`)}>Blogs</Button>
-          <Button className='menu' color='inherit' onClick={() => navigate(`/users/login`)}>Login</Button>
+          <Button className='menu' color='inherit' onClick={() => navigate(`/allblogs`)}>All Blogs</Button>
+          <Button className='menu' color='inherit' onClick={() => navigate(`/blogs`)}>My Blogs</Button>
+          <Button className='menu' color='inherit' onClick={Logout}>Logout</Button>
         </Toolbar>
       </AppBar>
 
@@ -48,11 +50,12 @@ function App() {
       <Routes>
         <Route path='/' element={<ProductedRoute><Home /></ProductedRoute>} />
         <Route path='/blogs' element={<ProductedRoute><BlogPage /></ProductedRoute>} />
+        <Route path='/allblogs' element={<ProductedRoute><AllBlogPage /></ProductedRoute>} />
         <Route path='/create/blog' element={<ProductedRoute><CreateBlog /></ProductedRoute>} />
         <Route path='/edit/blog/:id' element={<ProductedRoute><EditBlog /></ProductedRoute>} />
         <Route path='/blogs/:id' element={<ProductedRoute><BlogDetails /></ProductedRoute>} />
-        <Route path='/users/login' element={<Login />} />
-        <Route path='/users/signup' element={<SignUp />} />
+        <Route path='/bl_users/login' element={<Login />} />
+        <Route path='/bl_users/signup' element={<SignUp />} />
       </Routes>
     </div>
   );
@@ -62,7 +65,12 @@ function App() {
 function ProductedRoute({ children }) {
   const isAuth = localStorage.getItem("token");
   // console.log(isAuth);
-  return isAuth ? children : <Navigate replace to={"/users/login"} />;
+  return isAuth ? children : <Navigate replace to={"/bl_users/login"} />;
 }
 
+
+function Logout() {
+  localStorage.clear();
+  window.location.reload();
+}
 export default App;

@@ -9,9 +9,11 @@ import { API } from "./global";
 
 export function BlogPage() {
 
+  const userId = localStorage.getItem("Auth");
+  // console.log(userId);
 
   const [blogData, setBlogData] = useState([]);
-
+  //const [byName, setByName] = useState(userId)
 
   const getblogs = () => {
     fetch(`${API}/blogs`, { method: "GET" })
@@ -26,24 +28,33 @@ export function BlogPage() {
   };
 
   const navigate = useNavigate();
+
+  const gowhere = () => {
+
+    navigate(`/create/blog`);
+    window.location.reload();
+  }
+
+  console.log(blogData);
   return (
     <div className="blog-page">
-      <Button variant="contained" className="create" onClick={() => navigate(`/create/blog`)}>Create Blog +</Button>
+      <Button variant="contained" className="create" onClick={gowhere}>Create Blog +</Button>
       <div className="blogs-container">
-        {blogData.map((BD) => (<Blog
-          key={BD._id}
-          blog={BD}
-          id={BD._id}
-          deleteButton={<IconButton color="error" onClick={() => deleteBlog(BD._id)} sx={{ marginLeft: "auto" }}><DeleteIcon /></IconButton>}
-          editButton={ 
-          <IconButton
-            sx={{ marginLeft: "auto" }}
-            onClick={() => navigate(`/edit/blog/${BD._id}`)}
-            aria-label="edit"
-            color="primary"
-          >
-            <EditIcon />
-          </IconButton>}/>))}
+        {blogData.filter(p => p.userid === userId)     
+        .map((item) => (<Blog
+          key={item._id}
+          blog={item}
+          id={item._id}
+          deleteButton={<IconButton color="error" onClick={() => deleteBlog(item._id)} sx={{ marginLeft: "auto" }}><DeleteIcon /></IconButton>}
+          editButton={
+            <IconButton
+              sx={{ marginLeft: "auto" }}
+              onClick={() => navigate(`/edit/blog/${item._id}`)}
+              aria-label="edit"
+              color="primary"
+            >
+              <EditIcon />
+            </IconButton>} />))}
       </div>
     </div>
   );
@@ -60,7 +71,7 @@ function Blog({ blog, id, deleteButton, editButton }) {
       <CardContent>
         <div className="blog-specs">
           <h3 className='blog-name'>{blog.title}
-          <IconButton onClick={() => navigate(`/blogs/${id}`)} aria-label='toggle' color='primary'>
+            <IconButton onClick={() => navigate(`/blogs/${id}`)} aria-label='toggle' color='primary'>
               <InfoIcon />
             </IconButton></h3>
         </div>

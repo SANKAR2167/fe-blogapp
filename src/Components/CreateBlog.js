@@ -4,6 +4,8 @@ import { useFormik } from "formik";
 import * as yup from 'yup';
 import { API } from "./global";
 
+const userid= localStorage.getItem("Auth")
+
 const blogValidationSchema = yup.object({
   title: yup.string().required().min(10),
   image: yup.string().required().min(10).url(),
@@ -19,6 +21,7 @@ export function CreateBlog() {
       image: "",
       writer: "",
       description: "",
+      userid: userid,
     },
     validationSchema: blogValidationSchema,
     onSubmit: (newBlog) => {
@@ -78,6 +81,14 @@ export function CreateBlog() {
           onBlur={handleBlur}
         />
         {touched.description && errors.description ? errors.description : null}
+        <TextField
+          name="userid"
+          label="userid"
+          variant="outlined"
+          value={values.userid}
+          onBlur={handleBlur}
+        />
+        {touched.userid && errors.userid ? errors.userid : null}
         <Button
           variant="contained"
           color="error"

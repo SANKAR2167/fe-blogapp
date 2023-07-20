@@ -16,29 +16,32 @@ export default function Login(){
     })
     const { handleChange, values, handleSubmit } = useFormik({
         initialValues: {
-            username: "",
+            email: "",
             password: "",
         },
-        onSubmit: async (values) => {
-            // console.log(values);
+        onSubmit: (values) => {
+            //  console.log(values);
 
-            const data = await fetch(`${API}/users/login`, {
+            fetch(`${API}/bl_users/login`, {
                 method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(values)
             })
-
+            .then((data) => data.json())
+            .then(data => {
             if (data.status === 401) {
                 toast.error ("Login Failed");
                 console.log("Login Failed");
             } else {
-                const result = await data.json();
+                console.log(data);
+                localStorage.setItem("Auth", values.email)
                 toast.success("Login Success");
-                localStorage.setItem("token",result.token)
+                localStorage.setItem("token",data.token)
                 navigate("/")
             }
+            
 
-        }
+        })}
     })
 
 
@@ -48,11 +51,12 @@ export default function Login(){
                 <h2><VpnKeyIcon /> Sign In</h2>
                 <div className='login-input'>
                     <TextField
-                        name="username"
-                        label="User Name"
+                        name="email"
+                        label="Email"
+                        type='email'
                         variant="outlined"
                         onChange={handleChange}
-                        value={values.username}
+                        value={values.eMAIL}
                     />
 
                     <TextField
@@ -65,7 +69,7 @@ export default function Login(){
                     />
                     <Button variant="contained" type="submit" color='error'>Login<LoginIcon /></Button>
 
-                    <p className='text'>Don't have an account <span onClick={() => navigate(`/users/signup`)} className='nav'>Register</span> here</p>
+                    <p className='text'>Don't have an account <span onClick={() => navigate(`/bl_users/signup`)} className='nav'>Register</span> here</p>
                 </div>
             </Card>
         </form>

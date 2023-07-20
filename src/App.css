@@ -75,7 +75,7 @@
 .blog-container {
   background-color: white;
   width: 600px;
-  height: 450px;
+  height: max-content;
 }
 
 .login{
