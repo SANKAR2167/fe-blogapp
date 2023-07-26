@@ -36,8 +36,9 @@ export default function Login(){
                 console.log(data);
                 localStorage.setItem("Auth", values.email)
                 toast.success("Login Success");
-                localStorage.setItem("token",data.token)
-                navigate("/")
+                localStorage.setItem("token",data.token);
+                navigate("/");
+                window.location.reload();
             }
             
 

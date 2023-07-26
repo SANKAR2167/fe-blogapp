@@ -32,6 +32,19 @@ function App() {
   }, []);
   const navigate = useNavigate();
 
+  const [hide, setHide] = useState(true)
+
+  useEffect(()=>{
+    const token = localStorage.getItem("token");
+    setHide(token);
+  },[])
+
+
+  const Logout = ()=> {
+    localStorage.clear();
+    window.location.reload();
+    setHide(false)
+  }
 
 
   //https://6423eba3d6152a4d48023d2b.mockapi.io/blogs
@@ -42,7 +55,7 @@ function App() {
           <Button className='menu' color='inherit' onClick={() => navigate(`/`)}>Home</Button>
           <Button className='menu' color='inherit' onClick={() => navigate(`/allblogs`)}>All Blogs</Button>
           <Button className='menu' color='inherit' onClick={() => navigate(`/blogs`)}>My Blogs</Button>
-          <Button className='menu' color='inherit' onClick={Logout}>Logout</Button>
+          {hide ? (<Button className='menu' color='inherit' onClick={Logout}>Logout</Button>) : null}
         </Toolbar>
       </AppBar>
 
@@ -68,9 +81,4 @@ function ProductedRoute({ children }) {
   return isAuth ? children : <Navigate replace to={"/bl_users/login"} />;
 }
 
-
-function Logout() {
-  localStorage.clear();
-  window.location.reload();
-}
 export default App;
