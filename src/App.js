@@ -42,7 +42,7 @@ function App() {
 
   const Logout = ()=> {
     localStorage.clear();
-    window.location.reload();
+    // window.location.reload();
     setHide(false)
   }
 
