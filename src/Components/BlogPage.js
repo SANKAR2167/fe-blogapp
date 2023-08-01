@@ -32,7 +32,7 @@ export function BlogPage() {
   const gowhere = () => {
 
     navigate(`/create/blog`);
-    window.location.reload();
+   
   }
 
   console.log(blogData);
