@@ -10,7 +10,11 @@ const blogValidationSchema = yup.object({
   title: yup.string().required().min(10),
   image: yup.string().required().min(10).url(),
   writer: yup.string().required().min(5),
-  description: yup.string().required().min(50)
+  description: yup.string().required().test('word-count', 'The content must have at least 100 words', (value) => {
+    if (!value) return false; // If the value is empty, return false
+    const wordCount = value.trim().split(/\s+/).length; // Split by whitespace to count words
+    return wordCount >= 100; // Return true if the word count is at least 100
+  })
 })
 export function CreateBlog() {
 
@@ -42,7 +46,7 @@ export function CreateBlog() {
   return (
     <div>
       <h2 className="blog-add">Create New Blog</h2>
-      <form className="create-blog" onSubmit={handleSubmit}>
+      <form className="create-blog" onSubmit={handleSubmit} initialValues={{ description: '' }}>
         <TextField
           name="title"
           label="Blog Title"

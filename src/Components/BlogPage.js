@@ -35,7 +35,7 @@ export function BlogPage() {
    
   }
 
-  console.log(blogData);
+  // console.log(blogData);
   return (
     <div className="blog-page">
       <Button variant="contained" className="create" onClick={gowhere}>Create Blog +</Button>
